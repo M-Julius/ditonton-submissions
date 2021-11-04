@@ -1,3 +1,4 @@
+import 'package:ditonton/domain/entities/network_tv_series.dart';
 import 'package:equatable/equatable.dart';
 
 class NetworkModel extends Equatable {
@@ -21,6 +22,15 @@ class NetworkModel extends Equatable {
         'logo_path': logoPath,
         'origin_country': originCountry,
       };
+
+  NetworkTvSeries toEntity() {
+    return NetworkTvSeries(
+      id: this.id,
+      name: this.name,
+      logoPath: this.logoPath,
+      originCountry: this.originCountry,
+    );
+  }
 
   @override
   List<Object?> get props => [name, id, logoPath, originCountry];

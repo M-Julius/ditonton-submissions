@@ -17,18 +17,18 @@ class MovieDetail extends Equatable {
     required this.voteCount,
   });
 
-  final bool adult;
+  final bool? adult;
   final String? backdropPath;
   final List<Genre> genres;
   final int id;
-  final String originalTitle;
+  final String? originalTitle;
   final String overview;
-  final String posterPath;
-  final String releaseDate;
+  final String? posterPath;
+  final String? releaseDate;
   final int runtime;
   final String title;
   final double voteAverage;
-  final int voteCount;
+  final int? voteCount;
 
   @override
   List<Object?> get props => [

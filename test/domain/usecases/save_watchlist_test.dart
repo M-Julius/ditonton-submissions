@@ -8,11 +8,16 @@ import '../../helpers/test_helper.mocks.dart';
 
 void main() {
   late SaveWatchlist usecase;
+  late SaveTvSeriesWatchlist usecaseTvSeries;
   late MockMovieRepository mockMovieRepository;
+  late MockTvSeriesRepository mockTvSeriesRepository;
 
   setUp(() {
     mockMovieRepository = MockMovieRepository();
     usecase = SaveWatchlist(mockMovieRepository);
+
+    mockTvSeriesRepository = MockTvSeriesRepository();
+    usecaseTvSeries = SaveTvSeriesWatchlist(mockTvSeriesRepository);
   });
 
   test('should save movie to the repository', () async {
@@ -23,6 +28,17 @@ void main() {
     final result = await usecase.execute(testMovieDetail);
     // assert
     verify(mockMovieRepository.saveWatchlist(testMovieDetail));
+    expect(result, Right('Added to Watchlist'));
+  });
+
+  test('should save tv series to the repository', () async {
+    // arrange
+    when(mockTvSeriesRepository.saveTvSeriesWatchlist(testTvSeriesDetail))
+        .thenAnswer((_) async => Right('Added to Watchlist'));
+    // act
+    final result = await usecaseTvSeries.execute(testTvSeriesDetail);
+    // assert
+    verify(mockTvSeriesRepository.saveTvSeriesWatchlist(testTvSeriesDetail));
     expect(result, Right('Added to Watchlist'));
   });
 }

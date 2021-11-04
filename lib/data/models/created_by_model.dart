@@ -1,3 +1,4 @@
+import 'package:ditonton/domain/entities/created_by.dart';
 import 'package:equatable/equatable.dart';
 
 class CreatedByModel extends Equatable {
@@ -30,6 +31,16 @@ class CreatedByModel extends Equatable {
         'gender': gender,
         'profile_path': profilePath,
       };
+
+  CreatedBy toEntity() {
+    return CreatedBy(
+      id: this.id,
+      creditId: this.creditId,
+      name: this.name,
+      gender: this.gender,
+      profilePath: this.profilePath,
+    );
+  }
 
   @override
   List<Object?> get props => [id, creditId, name, gender, profilePath];
