@@ -65,7 +65,6 @@ void main() {
       originCountry: ['us'],
       originalLanguage: 'US');
   final tTvSeriesList = <TvSeries>[tTvModel];
-
   final tQuery = 'spiderman';
 
   group('search movies', () {

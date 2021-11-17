@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "83161936989",
+    "project_id": "jul-flutter",
+    "storage_bucket": "jul-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83161936989:android:a4079d6a8a3deea81649b4",
+        "android_client_info": {
+          "package_name": "com.dicoding.ditonton.juldev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "83161936989-4kh0eojcj5lp4d46h10f8def2f2opvs4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfDa-tKglCU_5r_f_ioOixxtsm3yXrt7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "83161936989-4kh0eojcj5lp4d46h10f8def2f2opvs4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

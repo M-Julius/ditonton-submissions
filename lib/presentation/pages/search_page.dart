@@ -1,12 +1,10 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/film_enum.dart';
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/domain/entities/movie.dart';
-import 'package:ditonton/domain/entities/tv_series.dart';
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
+import 'package:ditonton/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:ditonton/presentation/widgets/movie_card_list.dart';
 import 'package:ditonton/presentation/widgets/tv_series_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatelessWidget {
@@ -28,14 +26,10 @@ class SearchPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
-              onSubmitted: (query) {
-                if (this.type == FilmType.Movies) {
-                  Provider.of<MovieSearchNotifier>(context, listen: false)
-                      .fetchMovieSearch(query);
-                } else {
-                  Provider.of<MovieSearchNotifier>(context, listen: false)
-                      .fetchTvSeriesSearch(query);
-                }
+              onChanged: (query) {
+                context
+                    .read<SearchBloc>()
+                    .add(OnQueryChanged(query, this.type));
               },
               decoration: InputDecoration(
                 hintText: 'Search title',
@@ -49,26 +43,40 @@ class SearchPage extends StatelessWidget {
               'Search Result',
               style: kHeading6,
             ),
-            Consumer<MovieSearchNotifier>(
-              builder: (context, data, child) {
-                if (data.state == RequestState.Loading) {
+            BlocBuilder<SearchBloc, SearchState>(
+              builder: (context, state) {
+                if (state is SearchLoading) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (data.state == RequestState.Loaded) {
-                  final result = this.type == FilmType.Movies
-                      ? data.searchResultMovie
-                      : data.searchResultTvSeries;
+                } else if (state is SearchHasDataMovies) {
+                  final result = state.result;
                   return Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(8),
                       itemBuilder: (context, index) {
                         final movie = result[index];
-                        return this.type == FilmType.Movies
-                            ? MovieCard(movie as Movie)
-                            : TvSeriesCard(movie as TvSeries);
+                        return MovieCard(movie);
                       },
                       itemCount: result.length,
+                    ),
+                  );
+                } else if (state is SearchHasDataTvSeries) {
+                  final result = state.result;
+                  return Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemBuilder: (context, index) {
+                        final tv = result[index];
+                        return TvSeriesCard(tv);
+                      },
+                      itemCount: result.length,
+                    ),
+                  );
+                } else if (state is SearchError) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(state.message),
                     ),
                   );
                 } else {

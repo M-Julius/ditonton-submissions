@@ -12,23 +12,27 @@ import 'package:ditonton/presentation/pages/top_rated_tv_series_page.dart';
 import 'package:ditonton/presentation/pages/tv_series_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_movies_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_tv_series_page.dart';
-import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_series_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_series_list_notifier.dart';
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
-import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/popular_tv_series_notifier.dart';
-import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/top_rated_tv_series_notifier.dart';
-import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
-import 'package:ditonton/presentation/provider/watchlist_tv_series_notifier.dart';
+import 'package:ditonton/presentation/bloc/search_bloc/search_bloc.dart';
+import 'package:ditonton/presentation/bloc/popular_movies_bloc/popular_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/popular_tv_series_bloc/popular_tv_series_bloc.dart';
+import 'package:ditonton/presentation/bloc/top_rated_movies_bloc/top_rated_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/top_rated_tv_series_bloc/top_rated_tv_series_bloc.dart';
+import 'package:ditonton/presentation/bloc/watchlist_movies_bloc/watchlist_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/watchlist_tv_series_bloc/watchlist_tv_series_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie_detail_bloc/movie_detail_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_tv_series_bloc/home_tv_series_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_movie_bloc/home_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv_series_detail_bloc/tv_series_detail_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ditonton/injection.dart' as di;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   di.init();
   runApp(MyApp());
 }
@@ -36,40 +40,40 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieListNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<SearchBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieDetailNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<PopularMoviesBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieSearchNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<PopularTvSeriesBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedMoviesNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<TopRatedMoviesBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<PopularMoviesNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<TopRatedTvSeriesBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistMovieNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<WatchlistMoviesBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<PopularTvSeriesNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<WatchlistTvSeriesBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TvSeriesListNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<MovieDetailBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TvSeriesDetailNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<TvSeriesDetailBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistTvSeriesNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<HomeTvSeriesBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedTvSeriesNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<HomeMovieBloc>(),
         ),
       ],
       child: MaterialApp(
@@ -77,7 +81,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.dark().copyWith(
           colorScheme: kColorScheme,
           primaryColor: kRichBlack,
-          accentColor: kMikadoYellow,
           scaffoldBackgroundColor: kRichBlack,
           textTheme: kTextTheme,
         ),
