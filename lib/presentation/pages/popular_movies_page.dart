@@ -14,7 +14,7 @@ class _PopularMoviesPageState extends State<PopularMoviesPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<PopularMoviesBloc>(context).add(FetchPopularMovies());
+    context.read<PopularMoviesBloc>().add(FetchPopularMovies());
   }
 
   @override

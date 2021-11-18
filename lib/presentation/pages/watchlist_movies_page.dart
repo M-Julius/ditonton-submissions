@@ -15,7 +15,7 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<WatchlistMoviesBloc>(context).add(FetchWatchlistMovies());
+    context.read<WatchlistMoviesBloc>().add(FetchWatchlistMovies());
   }
 
   @override

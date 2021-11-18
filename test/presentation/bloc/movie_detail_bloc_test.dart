@@ -64,12 +64,11 @@ void main() {
     voteCount: 1,
   );
   final tMovies = <Movie>[tMovie];
-
-  final tIsAddedToWatchlist = true;
+  final tStatusWatchlist = true;
 
   group('Get Movie Detail', () {
     blocTest<MovieDetailBloc, MovieDetailState>(
-      'Should emit [Loading, HasData] when data detail movie & movies recomendation is gotten successfully',
+      'Should emit [Loading, HasData] when get data detail movie & movies recomendation is gotten successfully',
       build: () {
         when(mockGetMovieDetail.execute(tId))
             .thenAnswer((_) async => Right(testMovieDetail));
@@ -99,6 +98,78 @@ void main() {
       verify: (bloc) {
         verify(mockGetMovieDetail.execute(tId));
         verify(mockGetMovieRecommendations.execute(tId));
+      },
+    );
+
+    blocTest<MovieDetailBloc, MovieDetailState>(
+      'Should emit [Loading, Error] when get data detail movie is unsuccessful',
+      build: () {
+        when(mockGetMovieDetail.execute(tId))
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        when(mockGetMovieRecommendations.execute(tId))
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        return movieDetailBloc;
+      },
+      act: (bloc) => bloc.add(FetchDetailMovies(tId)),
+      expect: () => [
+        MovieDetailState.initial().copyWith(
+          movieDetailState: RequestState.Loading,
+        ),
+        MovieDetailState.initial().copyWith(
+          movieDetailState: RequestState.Error,
+          message: 'Server Failure',
+        )
+      ],
+      verify: (bloc) {
+        verify(mockGetMovieDetail.execute(tId));
+        verify(mockGetMovieRecommendations.execute(tId));
+      },
+    );
+
+    blocTest<MovieDetailBloc, MovieDetailState>(
+      'Should emit [SaveWatchlist] when save movie in watchlist',
+      build: () {
+        when(mockSaveWatchlist.execute(testMovieDetail)).thenAnswer(
+            (_) async => Right(MovieDetailBloc.watchlistAddSuccessMessage));
+        when(mockGetWatchListStatus.execute(tId))
+            .thenAnswer((_) async => tStatusWatchlist);
+        return movieDetailBloc;
+      },
+      act: (bloc) => bloc.add(AddWatchListMovie(testMovieDetail)),
+      expect: () => [
+        MovieDetailState.initial().copyWith(
+            isAddedToWatchlist: !tStatusWatchlist,
+            watchlistMessage: MovieDetailBloc.watchlistAddSuccessMessage),
+        MovieDetailState.initial().copyWith(
+          isAddedToWatchlist: tStatusWatchlist,
+          watchlistMessage: MovieDetailBloc.watchlistAddSuccessMessage,
+        ),
+      ],
+      verify: (bloc) {
+        verify(mockSaveWatchlist.execute(testMovieDetail));
+        verify(mockGetWatchListStatus.execute(tId));
+      },
+    );
+
+    blocTest<MovieDetailBloc, MovieDetailState>(
+      'Should emit [RemoveWatchlist] when remove movie in watchlist',
+      build: () {
+        when(mockRemoveWatchlist.execute(testMovieDetail)).thenAnswer(
+            (_) async => Right(MovieDetailBloc.watchlistRemoveSuccessMessage));
+        when(mockGetWatchListStatus.execute(tId))
+            .thenAnswer((_) async => !tStatusWatchlist);
+        return movieDetailBloc;
+      },
+      act: (bloc) => bloc.add(RemoveWatchListMovie(testMovieDetail)),
+      expect: () => [
+        MovieDetailState.initial().copyWith(
+          isAddedToWatchlist: !tStatusWatchlist,
+          watchlistMessage: MovieDetailBloc.watchlistRemoveSuccessMessage,
+        ),
+      ],
+      verify: (bloc) {
+        verify(mockRemoveWatchlist.execute(testMovieDetail));
+        verify(mockGetWatchListStatus.execute(tId));
       },
     );
   });

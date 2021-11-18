@@ -14,7 +14,7 @@ class _TopRatedTvSeriesPageState extends State<TopRatedTvSeriesPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TopRatedTvSeriesBloc>(context).add(FetchTopRatedTvSeries());
+    context.read<TopRatedTvSeriesBloc>().add(FetchTopRatedTvSeries());
   }
 
   @override
@@ -28,8 +28,7 @@ class _TopRatedTvSeriesPageState extends State<TopRatedTvSeriesPage> {
         child: BlocBuilder<TopRatedTvSeriesBloc, TopRatedTvSeriesState>(
             builder: (context, state) {
           if (state is TopRatedTvSeriesEmpty) {
-            BlocProvider.of<TopRatedTvSeriesBloc>(context)
-                .add(FetchTopRatedTvSeries());
+            context.read<TopRatedTvSeriesBloc>().add(FetchTopRatedTvSeries());
           }
           if (state is TopRatedTvSeriesHasData) {
             return ListView.builder(

@@ -15,8 +15,7 @@ class _WatchlistTvSeriesPageState extends State<WatchlistTvSeriesPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<WatchlistTvSeriesBloc>(context)
-        .add(FetchWatchlistTvSeries());
+    context.read<WatchlistTvSeriesBloc>().add(FetchWatchlistTvSeries());
   }
 
   @override

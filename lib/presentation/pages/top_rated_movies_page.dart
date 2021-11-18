@@ -14,7 +14,7 @@ class _TopRatedMoviesPageState extends State<TopRatedMoviesPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TopRatedMoviesBloc>(context).add(FetchTopRatedMovies());
+    context.read<TopRatedMoviesBloc>().add(FetchTopRatedMovies());
   }
 
   @override

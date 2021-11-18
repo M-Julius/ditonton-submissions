@@ -24,9 +24,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<MovieDetailBloc>(context).add(FetchDetailMovies(widget.id));
-    BlocProvider.of<MovieDetailBloc>(context)
-        .add(LoadStatusWatchlistMovie(widget.id));
+    context.read<MovieDetailBloc>().add(FetchDetailMovies(widget.id));
+    context.read<MovieDetailBloc>().add(LoadStatusWatchlistMovie(widget.id));
   }
 
   @override

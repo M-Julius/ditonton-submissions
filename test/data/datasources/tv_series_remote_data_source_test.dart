@@ -13,10 +13,10 @@ import '../../helpers/test_helper.mocks.dart';
 
 void main() {
   late TvSeriesRemoteDataSource dataSource;
-  late MockHttpClient mockHttpClient;
+  late MockIOClient mockHttpClient;
 
   setUp(() {
-    mockHttpClient = MockHttpClient();
+    mockHttpClient = MockIOClient();
     dataSource = TvSeriesRemoteDataSourceImpl(client: mockHttpClient);
   });
 

@@ -47,7 +47,6 @@ void main() {
   });
 
   final tId = 1;
-
   final tTvModel = TvSeries(
       backdropPath: '/muth4OYamXf41G2evdrLEg8d3om.jpg',
       genreIds: [14, 28],
@@ -63,10 +62,11 @@ void main() {
       originCountry: ['us'],
       originalLanguage: 'US');
   final tTvSeries = <TvSeries>[tTvModel];
+  final tStatusWatchlist = true;
 
-  group('Get TvSeries Detail', () {
+  group('Get Tv Series Detail', () {
     blocTest<TvSeriesDetailBloc, TvSeriesDetailState>(
-      'Should emit [Loading, HasData] when data detail tvSeries & tvSeries recomendation is gotten successfully',
+      'Should emit [Loading, HasData] when data detail tv series & tv series recomendation is gotten successfully',
       build: () {
         when(mockGetTvSeriesDetail.execute(tId))
             .thenAnswer((_) async => Right(testTvSeriesDetail));
@@ -96,6 +96,79 @@ void main() {
       verify: (bloc) {
         verify(mockGetTvSeriesDetail.execute(tId));
         verify(mockGetTvSeriesRecommendations.execute(tId));
+      },
+    );
+
+    blocTest<TvSeriesDetailBloc, TvSeriesDetailState>(
+      'Should emit [Loading, Error] when get data detail tv series is unsuccessful',
+      build: () {
+        when(mockGetTvSeriesDetail.execute(tId))
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        when(mockGetTvSeriesRecommendations.execute(tId))
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        return tvSeriesDetailBloc;
+      },
+      act: (bloc) => bloc.add(FetchDetailTvSeries(tId)),
+      expect: () => [
+        TvSeriesDetailState.initial().copyWith(
+          tvSeriesDetailState: RequestState.Loading,
+        ),
+        TvSeriesDetailState.initial().copyWith(
+          tvSeriesDetailState: RequestState.Error,
+          message: 'Server Failure',
+        )
+      ],
+      verify: (bloc) {
+        verify(mockGetTvSeriesDetail.execute(tId));
+        verify(mockGetTvSeriesRecommendations.execute(tId));
+      },
+    );
+
+    blocTest<TvSeriesDetailBloc, TvSeriesDetailState>(
+      'Should emit [SaveWatchlist] when save tv series in watchlist',
+      build: () {
+        when(mockSaveWatchlist.execute(testTvSeriesDetail)).thenAnswer(
+            (_) async => Right(TvSeriesDetailBloc.watchlistAddSuccessMessage));
+        when(mockGetWatchListStatus.execute(tId))
+            .thenAnswer((_) async => tStatusWatchlist);
+        return tvSeriesDetailBloc;
+      },
+      act: (bloc) => bloc.add(AddWatchListTvSeries(testTvSeriesDetail)),
+      expect: () => [
+        TvSeriesDetailState.initial().copyWith(
+            isAddedToWatchlist: !tStatusWatchlist,
+            watchlistMessage: TvSeriesDetailBloc.watchlistAddSuccessMessage),
+        TvSeriesDetailState.initial().copyWith(
+          isAddedToWatchlist: tStatusWatchlist,
+          watchlistMessage: TvSeriesDetailBloc.watchlistAddSuccessMessage,
+        ),
+      ],
+      verify: (bloc) {
+        verify(mockSaveWatchlist.execute(testTvSeriesDetail));
+        verify(mockGetWatchListStatus.execute(tId));
+      },
+    );
+
+    blocTest<TvSeriesDetailBloc, TvSeriesDetailState>(
+      'Should emit [RemoveWatchlist] when remove tv series in watchlist',
+      build: () {
+        when(mockRemoveWatchlist.execute(testTvSeriesDetail)).thenAnswer(
+            (_) async =>
+                Right(TvSeriesDetailBloc.watchlistRemoveSuccessMessage));
+        when(mockGetWatchListStatus.execute(tId))
+            .thenAnswer((_) async => !tStatusWatchlist);
+        return tvSeriesDetailBloc;
+      },
+      act: (bloc) => bloc.add(RemoveWatchListTvSeries(testTvSeriesDetail)),
+      expect: () => [
+        TvSeriesDetailState.initial().copyWith(
+          isAddedToWatchlist: !tStatusWatchlist,
+          watchlistMessage: TvSeriesDetailBloc.watchlistRemoveSuccessMessage,
+        ),
+      ],
+      verify: (bloc) {
+        verify(mockRemoveWatchlist.execute(testTvSeriesDetail));
+        verify(mockGetWatchListStatus.execute(tId));
       },
     );
   });

@@ -14,7 +14,7 @@ class _PopularTvSeriesPageState extends State<PopularTvSeriesPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<PopularTvSeriesBloc>(context).add(FetchPopularTvSeries());
+    context.read<PopularTvSeriesBloc>().add(FetchPopularTvSeries());
   }
 
   @override

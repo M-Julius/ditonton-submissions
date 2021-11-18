@@ -51,20 +51,16 @@ void main() {
   );
   final tMovies = <Movie>[tMovie];
 
-  void _arrangeUsecase() {
-    when(mockGetNowPlayingMovies.execute())
-        .thenAnswer((_) async => Right(tMovies));
-    when(mockGetPopularMovies.execute())
-        .thenAnswer((_) async => Right(tMovies));
-    when(mockGetTopRatedMovies.execute())
-        .thenAnswer((_) async => Right(tMovies));
-  }
-
   group('Get Home Movie', () {
     blocTest<HomeMovieBloc, HomeMovieState>(
       'Should emit [Loading, HasData] when data movie now playing, popular, top rated is gotten successfully',
       build: () {
-        _arrangeUsecase();
+        when(mockGetNowPlayingMovies.execute())
+            .thenAnswer((_) async => Right(tMovies));
+        when(mockGetPopularMovies.execute())
+            .thenAnswer((_) async => Right(tMovies));
+        when(mockGetTopRatedMovies.execute())
+            .thenAnswer((_) async => Right(tMovies));
         return homeMovieBloc;
       },
       act: (bloc) => bloc.add(FetchMovieList()),
@@ -95,6 +91,48 @@ void main() {
           moviesPopular: tMovies,
           moviesTopRatedState: RequestState.Loaded,
           moviesTopRated: tMovies,
+        ),
+      ],
+      verify: (bloc) {
+        verify(mockGetNowPlayingMovies.execute());
+        verify(mockGetPopularMovies.execute());
+        verify(mockGetTopRatedMovies.execute());
+      },
+    );
+
+    blocTest<HomeMovieBloc, HomeMovieState>(
+      'Should emit [Loading, Error] when data movie now playing, popular, top rated is unsuccessful',
+      build: () {
+        when(mockGetNowPlayingMovies.execute())
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        when(mockGetPopularMovies.execute())
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        when(mockGetTopRatedMovies.execute())
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        return homeMovieBloc;
+      },
+      act: (bloc) => bloc.add(FetchMovieList()),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [
+        HomeMovieState.initial().copyWith(
+          moviesNowPlayingState: RequestState.Loading,
+          moviesPopularState: RequestState.Loading,
+          moviesTopRatedState: RequestState.Loading,
+        ),
+        HomeMovieState.initial().copyWith(
+          moviesNowPlayingState: RequestState.Error,
+          moviesPopularState: RequestState.Loading,
+          moviesTopRatedState: RequestState.Loading,
+        ),
+        HomeMovieState.initial().copyWith(
+          moviesNowPlayingState: RequestState.Error,
+          moviesPopularState: RequestState.Error,
+          moviesTopRatedState: RequestState.Loading,
+        ),
+        HomeMovieState.initial().copyWith(
+          moviesNowPlayingState: RequestState.Error,
+          moviesPopularState: RequestState.Error,
+          moviesTopRatedState: RequestState.Error,
         ),
       ],
       verify: (bloc) {

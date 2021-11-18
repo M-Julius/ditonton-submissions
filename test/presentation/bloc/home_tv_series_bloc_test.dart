@@ -50,20 +50,16 @@ void main() {
       originalLanguage: 'US');
   final tTvSeries = <TvSeries>[tTvModel];
 
-  void _arrangeUsecase() {
-    when(mockGetNowPlayingTvSeries.execute())
-        .thenAnswer((_) async => Right(tTvSeries));
-    when(mockGetPopularTvSeries.execute())
-        .thenAnswer((_) async => Right(tTvSeries));
-    when(mockGetTopRatedTvSeries.execute())
-        .thenAnswer((_) async => Right(tTvSeries));
-  }
-
   group('Get Home Tv Series', () {
     blocTest<HomeTvSeriesBloc, HomeTvSeriesState>(
       'Should emit [Loading, HasData] when data Tv Series Now Playing, Popular, Top Rated is gotten successfully',
       build: () {
-        _arrangeUsecase();
+        when(mockGetNowPlayingTvSeries.execute())
+            .thenAnswer((_) async => Right(tTvSeries));
+        when(mockGetPopularTvSeries.execute())
+            .thenAnswer((_) async => Right(tTvSeries));
+        when(mockGetTopRatedTvSeries.execute())
+            .thenAnswer((_) async => Right(tTvSeries));
         return homeTvSeriesBloc;
       },
       act: (bloc) => bloc.add(FetchTvSeries()),
@@ -94,6 +90,48 @@ void main() {
           tvSeriesPopular: tTvSeries,
           tvSeriesTopRatedState: RequestState.Loaded,
           tvSeriesTopRated: tTvSeries,
+        ),
+      ],
+      verify: (bloc) {
+        verify(mockGetNowPlayingTvSeries.execute());
+        verify(mockGetPopularTvSeries.execute());
+        verify(mockGetTopRatedTvSeries.execute());
+      },
+    );
+
+    blocTest<HomeTvSeriesBloc, HomeTvSeriesState>(
+      'Should emit [Loading, Error] when data Tv Series Now Playing, Popular, Top Rated is unsuccessful',
+      build: () {
+        when(mockGetNowPlayingTvSeries.execute())
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        when(mockGetPopularTvSeries.execute())
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        when(mockGetTopRatedTvSeries.execute())
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        return homeTvSeriesBloc;
+      },
+      act: (bloc) => bloc.add(FetchTvSeries()),
+      wait: const Duration(milliseconds: 500),
+      expect: () => [
+        HomeTvSeriesState.initial().copyWith(
+          tvSeriesNowPlayingState: RequestState.Loading,
+          tvSeriesPopularState: RequestState.Loading,
+          tvSeriesTopRatedState: RequestState.Loading,
+        ),
+        HomeTvSeriesState.initial().copyWith(
+          tvSeriesNowPlayingState: RequestState.Error,
+          tvSeriesPopularState: RequestState.Loading,
+          tvSeriesTopRatedState: RequestState.Loading,
+        ),
+        HomeTvSeriesState.initial().copyWith(
+          tvSeriesNowPlayingState: RequestState.Error,
+          tvSeriesPopularState: RequestState.Error,
+          tvSeriesTopRatedState: RequestState.Loading,
+        ),
+        HomeTvSeriesState.initial().copyWith(
+          tvSeriesNowPlayingState: RequestState.Error,
+          tvSeriesPopularState: RequestState.Error,
+          tvSeriesTopRatedState: RequestState.Error,
         ),
       ],
       verify: (bloc) {

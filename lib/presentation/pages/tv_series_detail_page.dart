@@ -24,9 +24,9 @@ class _TvSeriesDetailPageState extends State<TvSeriesDetailPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TvSeriesDetailBloc>(context)
-        .add(FetchDetailTvSeries(widget.id));
-    BlocProvider.of<TvSeriesDetailBloc>(context)
+    context.read<TvSeriesDetailBloc>().add(FetchDetailTvSeries(widget.id));
+    context
+        .read<TvSeriesDetailBloc>()
         .add(LoadStatusWatchlistTvSeries(widget.id));
   }
 
