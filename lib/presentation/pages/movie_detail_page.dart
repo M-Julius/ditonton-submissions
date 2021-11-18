@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ditonton/common/constants.dart';
+import 'package:core/core.dart';
 import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
 import 'package:ditonton/presentation/bloc/movie_detail_bloc/movie_detail_bloc.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -118,25 +117,14 @@ class DetailContent extends StatelessWidget {
                                         .add(RemoveWatchListMovie(movie));
                                   }
 
-                                  final message = state.watchlistMessage;
+                                  final message = !isAddedWatchlist
+                                      ? MovieDetailBloc
+                                          .watchlistAddSuccessMessage
+                                      : MovieDetailBloc
+                                          .watchlistRemoveSuccessMessage;
 
-                                  if (message ==
-                                          MovieDetailBloc
-                                              .watchlistAddSuccessMessage ||
-                                      message ==
-                                          MovieDetailBloc
-                                              .watchlistRemoveSuccessMessage) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text(message)));
-                                  } else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            content: Text(message),
-                                          );
-                                        });
-                                  }
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(message)));
                                 },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,

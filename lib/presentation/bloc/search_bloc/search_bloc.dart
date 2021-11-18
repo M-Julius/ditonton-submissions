@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:ditonton/common/film_enum.dart';
+import 'package:core/core.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/tv_series.dart';
 import 'package:ditonton/domain/usecases/search_movies.dart';

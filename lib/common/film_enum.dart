@@ -1,1 +1,0 @@
-enum FilmType { Movies, TvSeries }

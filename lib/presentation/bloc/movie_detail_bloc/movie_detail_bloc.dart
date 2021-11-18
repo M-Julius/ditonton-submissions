@@ -1,4 +1,4 @@
-import 'package:ditonton/common/state_enum.dart';
+import 'package:core/core.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
 import 'package:ditonton/domain/usecases/get_movie_detail.dart';
@@ -29,72 +29,77 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
     required this.saveWatchlist,
     required this.removeWatchlist,
   }) : super(MovieDetailState.initial()) {
-    on<FetchDetailMovies>((event, emit) async {
-      emit(state.copyWith(movieDetailState: RequestState.Loading));
+    on<FetchDetailMovies>(_fetchDetailMovies);
+    on<AddWatchListMovie>(_addWatchlist);
+    on<RemoveWatchListMovie>(_removeWatchlist);
+    on<LoadStatusWatchlistMovie>(_loadStatusWatchlist);
+  }
 
-      final detailResult = await getMovieDetail.execute(event.id);
+  Future<void> _fetchDetailMovies(event, emit) async {
+    emit(state.copyWith(movieDetailState: RequestState.Loading));
 
-      final recommendationResult =
-          await getMovieRecommendations.execute(event.id);
+    final detailResult = await getMovieDetail.execute(event.id);
 
-      detailResult.fold(
-        (failure) async {
-          emit(state.copyWith(
-            movieDetailState: RequestState.Error,
-            message: failure.message,
-          ));
-        },
-        (movie) async {
-          emit(state.copyWith(
-            movieRecommendationState: RequestState.Loading,
-            movieDetail: movie,
-            movieDetailState: RequestState.Loaded,
-            message: '',
-          ));
-          recommendationResult.fold(
-            (failure) {
-              emit(state.copyWith(
-                movieRecommendationState: RequestState.Error,
-                message: failure.message,
-              ));
-            },
-            (movies) {
-              emit(state.copyWith(
-                movieRecommendationState: RequestState.Loaded,
-                movieRecommendations: movies,
-                message: '',
-              ));
-            },
-          );
-        },
-      );
+    final recommendationResult =
+        await getMovieRecommendations.execute(event.id);
+
+    detailResult.fold(
+      (failure) async {
+        emit(state.copyWith(
+          movieDetailState: RequestState.Error,
+          message: failure.message,
+        ));
+      },
+      (movie) async {
+        emit(state.copyWith(
+          movieRecommendationState: RequestState.Loading,
+          movieDetail: movie,
+          movieDetailState: RequestState.Loaded,
+          message: '',
+        ));
+        recommendationResult.fold(
+          (failure) {
+            emit(state.copyWith(
+              movieRecommendationState: RequestState.Error,
+              message: failure.message,
+            ));
+          },
+          (movies) {
+            emit(state.copyWith(
+              movieRecommendationState: RequestState.Loaded,
+              movieRecommendations: movies,
+              message: '',
+            ));
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _addWatchlist(event, emit) async {
+    final result = await saveWatchlist.execute(event.movie);
+
+    result.fold((failure) {
+      emit(state.copyWith(watchlistMessage: failure.message));
+    }, (successMessage) {
+      emit(state.copyWith(watchlistMessage: successMessage));
     });
+    add(LoadStatusWatchlistMovie(event.movie.id));
+  }
 
-    on<AddWatchListMovie>((event, emit) async {
-      final result = await saveWatchlist.execute(event.movie);
+  Future<void> _removeWatchlist(event, emit) async {
+    final result = await removeWatchlist.execute(event.movie);
 
-      result.fold((failure) {
-        emit(state.copyWith(watchlistMessage: failure.message));
-      }, (successMessage) {
-        emit(state.copyWith(watchlistMessage: successMessage));
-      });
-      add(LoadStatusWatchlistMovie(event.movie.id));
+    result.fold((failure) {
+      emit(state.copyWith(watchlistMessage: failure.message));
+    }, (successMessage) {
+      emit(state.copyWith(watchlistMessage: successMessage));
     });
+    add(LoadStatusWatchlistMovie(event.movie.id));
+  }
 
-    on<RemoveWatchListMovie>((event, emit) async {
-      final result = await removeWatchlist.execute(event.movie);
-
-      result.fold((failure) {
-        emit(state.copyWith(watchlistMessage: failure.message));
-      }, (successMessage) {
-        emit(state.copyWith(watchlistMessage: successMessage));
-      });
-      add(LoadStatusWatchlistMovie(event.movie.id));
-    });
-
-    on<LoadStatusWatchlistMovie>((event, emit) async {
-      final result = await getWatchListStatus.execute(event.id);
-      emit(state.copyWith(isAddedToWatchlist: result));
-    });
+  Future<void> _loadStatusWatchlist(event, emit) async {
+    final result = await getWatchListStatus.execute(event.id);
+    emit(state.copyWith(isAddedToWatchlist: result));
   }
 }

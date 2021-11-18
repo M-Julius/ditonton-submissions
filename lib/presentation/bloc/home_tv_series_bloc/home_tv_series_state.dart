@@ -1,6 +1,6 @@
 part of 'home_tv_series_bloc.dart';
 
-class HomeTvSeriesState {
+class HomeTvSeriesState extends Equatable {
   final List<TvSeries> tvSeriesPopular;
   final RequestState tvSeriesPopularState;
   final List<TvSeries> tvSeriesNowPlaying;
@@ -44,4 +44,14 @@ class HomeTvSeriesState {
         tvSeriesTopRated: [],
         tvSeriesTopRatedState: RequestState.Empty,
       );
+
+  @override
+  List<Object> get props => [
+        tvSeriesNowPlaying,
+        tvSeriesNowPlayingState,
+        tvSeriesPopular,
+        tvSeriesPopularState,
+        tvSeriesTopRated,
+        tvSeriesTopRatedState,
+      ];
 }

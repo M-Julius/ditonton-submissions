@@ -1,4 +1,4 @@
-import 'package:ditonton/common/state_enum.dart';
+import 'package:core/core.dart';
 import 'package:ditonton/domain/entities/tv_series.dart';
 import 'package:ditonton/domain/usecases/get_now_playing_tv_series.dart';
 import 'package:ditonton/domain/usecases/get_popular_tv_series.dart';
@@ -19,43 +19,45 @@ class HomeTvSeriesBloc extends Bloc<HomeTvSeriesEvent, HomeTvSeriesState> {
     required this.getPopularTvSeries,
     required this.getTopRatedTvSeries,
   }) : super(HomeTvSeriesState.initial()) {
-    on<FetchTvSeries>((event, emit) async {
+    on<FetchTvSeries>(_fetchTvSeries);
+  }
+
+  Future<void> _fetchTvSeries(event, emit) async {
+    emit(state.copyWith(
+      tvSeriesNowPlayingState: RequestState.Loading,
+      tvSeriesPopularState: RequestState.Loading,
+      tvSeriesTopRatedState: RequestState.Loading,
+    ));
+
+    final result = await getNowPlayingTvSeries.execute();
+    final resultPopular = await getPopularTvSeries.execute();
+    final resultTopRated = await getTopRatedTvSeries.execute();
+
+    result.fold((failure) async {
+      emit(state.copyWith(tvSeriesNowPlayingState: RequestState.Error));
+    }, (data) async {
       emit(state.copyWith(
-        tvSeriesNowPlayingState: RequestState.Loading,
-        tvSeriesPopularState: RequestState.Loading,
-        tvSeriesTopRatedState: RequestState.Loading,
+        tvSeriesNowPlayingState: RequestState.Loaded,
+        tvSeriesNowPlaying: data,
       ));
+    });
 
-      final result = await getNowPlayingTvSeries.execute();
-      final resultPopular = await getPopularTvSeries.execute();
-      final resultTopRated = await getTopRatedTvSeries.execute();
+    resultPopular.fold((failure) async {
+      emit(state.copyWith(tvSeriesPopularState: RequestState.Error));
+    }, (data) async {
+      emit(state.copyWith(
+        tvSeriesPopularState: RequestState.Loaded,
+        tvSeriesPopular: data,
+      ));
+    });
 
-      result.fold((failure) async {
-        emit(state.copyWith(tvSeriesNowPlayingState: RequestState.Error));
-      }, (data) async {
-        emit(state.copyWith(
-          tvSeriesNowPlayingState: RequestState.Loaded,
-          tvSeriesNowPlaying: data,
-        ));
-      });
-
-      resultPopular.fold((failure) async {
-        emit(state.copyWith(tvSeriesPopularState: RequestState.Error));
-      }, (data) async {
-        emit(state.copyWith(
-          tvSeriesPopularState: RequestState.Loaded,
-          tvSeriesPopular: data,
-        ));
-      });
-
-      resultTopRated.fold((failure) async {
-        emit(state.copyWith(tvSeriesTopRatedState: RequestState.Error));
-      }, (data) async {
-        emit(state.copyWith(
-          tvSeriesTopRatedState: RequestState.Loaded,
-          tvSeriesTopRated: data,
-        ));
-      });
+    resultTopRated.fold((failure) async {
+      emit(state.copyWith(tvSeriesTopRatedState: RequestState.Error));
+    }, (data) async {
+      emit(state.copyWith(
+        tvSeriesTopRatedState: RequestState.Loaded,
+        tvSeriesTopRated: data,
+      ));
     });
   }
 }

@@ -1,4 +1,4 @@
-import 'package:ditonton/common/state_enum.dart';
+import 'package:core/core.dart';
 import 'package:ditonton/domain/entities/tv_series.dart';
 import 'package:ditonton/domain/entities/tv_series_detail.dart';
 import 'package:ditonton/domain/usecases/get_tv_series_detail.dart';
@@ -30,72 +30,76 @@ class TvSeriesDetailBloc
     required this.saveTvSeriesWatchlist,
     required this.removeTvSeriesWatchlist,
   }) : super(TvSeriesDetailState.initial()) {
-    on<FetchDetailTvSeries>((event, emit) async {
-      emit(state.copyWith(tvSeriesDetailState: RequestState.Loading));
+    on<FetchDetailTvSeries>(_fetchDetailTvSeries);
+    on<AddWatchListTvSeries>(_addWatchlistTvSeries);
+    on<RemoveWatchListTvSeries>(_removeWatchlistTvSeries);
+    on<LoadStatusWatchlistTvSeries>(_loadStatusWatchlist);
+  }
 
-      final detailResult = await getTvSeriesDetail.execute(event.id);
+  Future<void> _fetchDetailTvSeries(event, emit) async {
+    emit(state.copyWith(tvSeriesDetailState: RequestState.Loading));
 
-      final recommendationResult =
-          await getTvSeriesRecommendations.execute(event.id);
+    final detailResult = await getTvSeriesDetail.execute(event.id);
+    final recommendationResult =
+        await getTvSeriesRecommendations.execute(event.id);
 
-      detailResult.fold(
-        (failure) async {
-          emit(state.copyWith(
-            tvSeriesDetailState: RequestState.Error,
-            message: failure.message,
-          ));
-        },
-        (tvSeries) async {
-          emit(state.copyWith(
-            tvSeriesRecommendationState: RequestState.Loading,
-            tvSeriesDetail: tvSeries,
-            tvSeriesDetailState: RequestState.Loaded,
-            message: '',
-          ));
-          recommendationResult.fold(
-            (failure) {
-              emit(state.copyWith(
-                tvSeriesRecommendationState: RequestState.Error,
-                message: failure.message,
-              ));
-            },
-            (tvSeriess) {
-              emit(state.copyWith(
-                tvSeriesRecommendationState: RequestState.Loaded,
-                tvSeriesRecommendations: tvSeriess,
-                message: '',
-              ));
-            },
-          );
-        },
-      );
+    detailResult.fold(
+      (failure) async {
+        emit(state.copyWith(
+          tvSeriesDetailState: RequestState.Error,
+          message: failure.message,
+        ));
+      },
+      (tvSeries) async {
+        emit(state.copyWith(
+          tvSeriesRecommendationState: RequestState.Loading,
+          tvSeriesDetail: tvSeries,
+          tvSeriesDetailState: RequestState.Loaded,
+          message: '',
+        ));
+        recommendationResult.fold(
+          (failure) {
+            emit(state.copyWith(
+              tvSeriesRecommendationState: RequestState.Error,
+              message: failure.message,
+            ));
+          },
+          (tvSeriess) {
+            emit(state.copyWith(
+              tvSeriesRecommendationState: RequestState.Loaded,
+              tvSeriesRecommendations: tvSeriess,
+              message: '',
+            ));
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _addWatchlistTvSeries(event, emit) async {
+    final result = await saveTvSeriesWatchlist.execute(event.tv);
+
+    result.fold((failure) {
+      emit(state.copyWith(watchlistMessage: failure.message));
+    }, (successMessage) {
+      emit(state.copyWith(watchlistMessage: successMessage));
     });
+    add(LoadStatusWatchlistTvSeries(event.tv.id!));
+  }
 
-    on<AddWatchListTvSeries>((event, emit) async {
-      final result = await saveTvSeriesWatchlist.execute(event.tv);
+  Future<void> _removeWatchlistTvSeries(event, emit) async {
+    final result = await removeTvSeriesWatchlist.execute(event.tv);
 
-      result.fold((failure) {
-        emit(state.copyWith(watchlistMessage: failure.message));
-      }, (successMessage) {
-        emit(state.copyWith(watchlistMessage: successMessage));
-      });
-      add(LoadStatusWatchlistTvSeries(event.tv.id!));
+    result.fold((failure) {
+      emit(state.copyWith(watchlistMessage: failure.message));
+    }, (successMessage) {
+      emit(state.copyWith(watchlistMessage: successMessage));
     });
+    add(LoadStatusWatchlistTvSeries(event.tv.id!));
+  }
 
-    on<RemoveWatchListTvSeries>((event, emit) async {
-      final result = await removeTvSeriesWatchlist.execute(event.tv);
-
-      result.fold((failure) {
-        emit(state.copyWith(watchlistMessage: failure.message));
-      }, (successMessage) {
-        emit(state.copyWith(watchlistMessage: successMessage));
-      });
-      add(LoadStatusWatchlistTvSeries(event.tv.id!));
-    });
-
-    on<LoadStatusWatchlistTvSeries>((event, emit) async {
-      final result = await getWatchListStatus.execute(event.id);
-      emit(state.copyWith(isAddedToWatchlist: result));
-    });
+  Future<void> _loadStatusWatchlist(event, emit) async {
+    final result = await getWatchListStatus.execute(event.id);
+    emit(state.copyWith(isAddedToWatchlist: result));
   }
 }

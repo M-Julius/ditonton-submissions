@@ -1,4 +1,4 @@
-import 'package:ditonton/common/state_enum.dart';
+import 'package:core/core.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/usecases/get_now_playing_movies.dart';
 import 'package:ditonton/domain/usecases/get_popular_movies.dart';
@@ -19,43 +19,45 @@ class HomeMovieBloc extends Bloc<HomeMovieEvent, HomeMovieState> {
     required this.getPopularMovies,
     required this.getTopRatedMovies,
   }) : super(HomeMovieState.initial()) {
-    on<FetchMovieList>((event, emit) async {
+    on<FetchMovieList>(_fetchMovieList);
+  }
+
+  Future<void> _fetchMovieList(event, emit) async {
+    emit(state.copyWith(
+      moviesNowPlayingState: RequestState.Loading,
+      moviesPopularState: RequestState.Loading,
+      moviesTopRatedState: RequestState.Loading,
+    ));
+
+    final result = await getNowPlayingMovies.execute();
+    final resultPopular = await getPopularMovies.execute();
+    final resultTopRated = await getTopRatedMovies.execute();
+
+    result.fold((failure) async {
+      emit(state.copyWith(moviesNowPlayingState: RequestState.Error));
+    }, (data) async {
       emit(state.copyWith(
-        moviesNowPlayingState: RequestState.Loading,
-        moviesPopularState: RequestState.Loading,
-        moviesTopRatedState: RequestState.Loading,
+        moviesNowPlayingState: RequestState.Loaded,
+        moviesNowPlaying: data,
       ));
+    });
 
-      final result = await getNowPlayingMovies.execute();
-      final resultPopular = await getPopularMovies.execute();
-      final resultTopRated = await getTopRatedMovies.execute();
+    resultPopular.fold((failure) async {
+      emit(state.copyWith(moviesPopularState: RequestState.Error));
+    }, (data) async {
+      emit(state.copyWith(
+        moviesPopularState: RequestState.Loaded,
+        moviesPopular: data,
+      ));
+    });
 
-      result.fold((failure) async {
-        emit(state.copyWith(moviesNowPlayingState: RequestState.Error));
-      }, (data) async {
-        emit(state.copyWith(
-          moviesNowPlayingState: RequestState.Loaded,
-          moviesNowPlaying: data,
-        ));
-      });
-
-      resultPopular.fold((failure) async {
-        emit(state.copyWith(moviesPopularState: RequestState.Error));
-      }, (data) async {
-        emit(state.copyWith(
-          moviesPopularState: RequestState.Loaded,
-          moviesPopular: data,
-        ));
-      });
-
-      resultTopRated.fold((failure) async {
-        emit(state.copyWith(moviesTopRatedState: RequestState.Error));
-      }, (data) async {
-        emit(state.copyWith(
-          moviesTopRatedState: RequestState.Loaded,
-          moviesTopRated: data,
-        ));
-      });
+    resultTopRated.fold((failure) async {
+      emit(state.copyWith(moviesTopRatedState: RequestState.Error));
+    }, (data) async {
+      emit(state.copyWith(
+        moviesTopRatedState: RequestState.Loaded,
+        moviesTopRated: data,
+      ));
     });
   }
 }

@@ -1,6 +1,6 @@
 part of 'movie_detail_bloc.dart';
 
-class MovieDetailState {
+class MovieDetailState extends Equatable {
   final MovieDetail movieDetail;
   final RequestState movieDetailState;
   final List<Movie> movieRecommendations;
@@ -62,4 +62,15 @@ class MovieDetailState {
       watchlistMessage: watchlistMessage ?? this.watchlistMessage,
     );
   }
+
+  @override
+  List<Object> get props => [
+        movieDetail,
+        movieDetailState,
+        movieRecommendationState,
+        movieRecommendations,
+        isAddedToWatchlist,
+        message,
+        watchlistMessage
+      ];
 }

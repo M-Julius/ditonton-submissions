@@ -1,5 +1,4 @@
-import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/film_enum.dart';
+import 'package:core/core.dart';
 import 'package:ditonton/presentation/bloc/search_bloc/search_bloc.dart';
 import 'package:ditonton/presentation/widgets/movie_card_list.dart';
 import 'package:ditonton/presentation/widgets/tv_series_card_list.dart';

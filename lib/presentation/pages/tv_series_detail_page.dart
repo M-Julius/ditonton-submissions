@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ditonton/common/constants.dart';
+import 'package:core/core.dart';
 import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/tv_series.dart';
 import 'package:ditonton/domain/entities/tv_series_detail.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/bloc/tv_series_detail_bloc/tv_series_detail_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -119,25 +118,14 @@ class DetailContent extends StatelessWidget {
                                         .add(RemoveWatchListTvSeries(tv));
                                   }
 
-                                  final message = state.watchlistMessage;
+                                  final message = !isAddedWatchlist
+                                      ? TvSeriesDetailBloc
+                                          .watchlistAddSuccessMessage
+                                      : TvSeriesDetailBloc
+                                          .watchlistRemoveSuccessMessage;
 
-                                  if (message ==
-                                          TvSeriesDetailBloc
-                                              .watchlistAddSuccessMessage ||
-                                      message ==
-                                          TvSeriesDetailBloc
-                                              .watchlistRemoveSuccessMessage) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text(message)));
-                                  } else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            content: Text(message),
-                                          );
-                                        });
-                                  }
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(message)));
                                 },
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,

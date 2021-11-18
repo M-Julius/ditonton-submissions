@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/film_enum.dart';
-import 'package:ditonton/common/state_enum.dart';
+import 'package:core/core.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/presentation/bloc/home_movie_bloc/home_movie_bloc.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
@@ -24,8 +22,6 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
   void initState() {
     super.initState();
     BlocProvider.of<HomeMovieBloc>(context).add(FetchMovieList());
-    // BlocProvider.of<PopularMoviesBloc>(context).add(FetchPopularMovies());
-    // BlocProvider.of<TopRatedMoviesBloc>(context).add(FetchTopRatedMovies());
   }
 
   @override
