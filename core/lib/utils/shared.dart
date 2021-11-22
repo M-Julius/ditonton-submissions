@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 
+/// reference https://www.dicoding.com/academies/199/discussions/136107
 class Shared {
   static Future<HttpClient> customHttpClient() async {
     SecurityContext context = SecurityContext(withTrustedRoots: false);
