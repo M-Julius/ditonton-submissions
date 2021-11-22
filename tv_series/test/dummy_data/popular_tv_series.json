@@ -1,0 +1,28 @@
+{
+    "page": 1,
+    "results": [
+      {
+        "poster_path": "/path.jpg",
+        "popularity": 47.432451,
+        "id": 1,
+        "backdrop_path": "/path.jpg",
+        "vote_average": 5.04,
+        "overview": "overview.",
+        "first_air_date": "2010-06-08",
+        "origin_country": [
+          "US"
+        ],
+        "genre_ids": [
+          1,
+          2,
+          3
+        ],
+        "original_language": "en",
+        "vote_count": 133,
+        "name": "Name",
+        "original_name": "Original Name"
+      }
+    ],
+    "total_results": 1,
+    "total_pages": 10  
+}

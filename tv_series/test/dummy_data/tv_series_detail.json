@@ -1,0 +1,109 @@
+{
+    "backdrop_path": "/backdrop_path.jpg",
+    "created_by": [
+      {
+        "id": 1,
+        "credit_id": "1",
+        "name": "Name",
+        "gender": 1,
+        "profile_path": "/profile_path.jpg"
+      }
+    ],
+    "episode_run_time": [60],
+    "first_air_date": "2011-04-17",
+    "genres": [
+      {
+        "id": 1,
+        "name": "Sci-Fi & Fantasy"
+      }
+    ],
+    "homepage": "http://google.com",
+    "id": 1,
+    "in_production": false,
+    "languages": [
+      "en"
+    ],
+    "last_air_date": "2019-05-19",
+    "last_episode_to_air": {
+      "air_date": "2019-05-19",
+      "episode_number": 6,
+      "id": 1551830,
+      "name": "The Iron Throne",
+      "overview": "In the aftermath of the devastating attack on King's Landing, Daenerys must face the survivors.",
+      "production_code": "806",
+      "season_number": 8,
+      "still_path": "/3x8tJon5jXFa1ziAM93hPKNyW7i.jpg",
+      "vote_average": 4.8,
+      "vote_count": 106
+    },
+    "name": "Game of Thrones",
+    "next_episode_to_air": "10",
+    "networks": [
+      {
+        "name": "HBO",
+        "id": 49,
+        "logo_path": "/tuomPhY2UtuPTqqFnKMVHvSb724.png",
+        "origin_country": "US"
+      }
+    ],
+    "number_of_episodes": 73,
+    "number_of_seasons": 8,
+    "origin_country": [
+      "US"
+    ],
+    "original_language": "en",
+    "original_name": "Game of Thrones",
+    "overview": "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond.",
+    "popularity": 369.594,
+    "poster_path": "/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg",
+    "production_companies": [
+      {
+        "id": 76043,
+        "logo_path": "/9RO2vbQ67otPrBLXCaC8UMp3Qat.png",
+        "name": "Revolution Sun Studios",
+        "origin_country": "US"
+      }
+    ],
+    "production_countries": [
+      {
+        "iso_3166_1": "GB",
+        "name": "United Kingdom"
+      },
+      {
+        "iso_3166_1": "US",
+        "name": "United States of America"
+      }
+    ],
+    "seasons": [
+      {
+        "air_date": "2017-07-16",
+        "episode_count": 7,
+        "id": 81266,
+        "name": "Season 7",
+        "overview": "The long winter is here. And with it comes a convergence of armies and attitudes that have been brewing for years.",
+        "poster_path": "/3dqzU3F3dZpAripEx9kRnijXbOj.jpg",
+        "season_number": 7
+      },
+      {
+        "air_date": "2019-04-14",
+        "episode_count": 6,
+        "id": 107971,
+        "name": "Season 8",
+        "overview": "The Great War has come, the Wall has fallen and the Night King's army of the dead marches towards Westeros. The end is here, but who will take the Iron Throne?",
+        "poster_path": "/39FHkTLnNMjMVXdIDwZN8SxYqD6.jpg",
+        "season_number": 8
+      }
+    ],
+    "spoken_languages": [
+      {
+        "english_name": "English",
+        "iso_639_1": "en",
+        "name": "English"
+      }
+    ],
+    "status": "Ended",
+    "tagline": "Winter Is Coming",
+    "type": "Scripted",
+    "vote_average": 8.3,
+    "vote_count": 11504
+  }
