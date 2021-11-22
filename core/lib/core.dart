@@ -7,3 +7,4 @@ export 'utils/exception.dart';
 export 'utils/failure.dart';
 export 'utils/state_enum.dart';
 export 'utils/film_enum.dart';
+export 'utils/ssl_helper.dart';
