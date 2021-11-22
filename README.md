@@ -4,5 +4,5 @@
 - [x] CI/CD Code Magic
 - [x] Migrating provider to Bloc
 - [x] Integrating SSL Pinning on Http Client
-- [x] Integrasi dengan Firebase [Analytics](screenshot/analytics.png) & [Crashlytics](screenshot/crashlythic.png).
+- [x] Integrating with Firebase [Analytics](screenshot/analytics.png) & [Crashlytics](screenshot/crashlythic.png).
 - [x] Modularization Movie & Tv Series
