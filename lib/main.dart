@@ -1,6 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:ditonton/injection.dart' as di;
+
+/// about presentation
 import 'package:about/about.dart';
+
+/// core module
 import 'package:core/core.dart';
 
+/// tv series bloc
 import 'package:tv_series/presentation/bloc/popular_tv_series_bloc/popular_tv_series_bloc.dart';
 import 'package:tv_series/presentation/bloc/top_rated_tv_series_bloc/top_rated_tv_series_bloc.dart';
 import 'package:tv_series/presentation/bloc/watchlist_tv_series_bloc/watchlist_tv_series_bloc.dart';
@@ -8,6 +19,7 @@ import 'package:tv_series/presentation/bloc/home_tv_series_bloc/home_tv_series_b
 import 'package:tv_series/presentation/bloc/tv_series_detail_bloc/tv_series_detail_bloc.dart';
 import 'package:tv_series/presentation/bloc/search_tv_series_bloc/search_bloc.dart';
 
+/// movie bloc
 import 'package:movie/presentation/bloc/home_movie_bloc/home_movie_bloc.dart';
 import 'package:movie/presentation/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:movie/presentation/bloc/popular_movies_bloc/popular_movies_bloc.dart';
@@ -15,6 +27,7 @@ import 'package:movie/presentation/bloc/top_rated_movies_bloc/top_rated_movies_b
 import 'package:movie/presentation/bloc/watchlist_movies_bloc/watchlist_movies_bloc.dart';
 import 'package:movie/presentation/bloc/search_movie_bloc/search_bloc.dart';
 
+/// movie presentation page
 import 'package:movie/presentation/pages/home_movie_page.dart';
 import 'package:movie/presentation/pages/movie_detail_page.dart';
 import 'package:movie/presentation/pages/popular_movies_page.dart';
@@ -22,19 +35,13 @@ import 'package:movie/presentation/pages/top_rated_movies_page.dart';
 import 'package:movie/presentation/pages/watchlist_movies_page.dart';
 import 'package:movie/presentation/pages/search_movie_page.dart';
 
+/// tv series presentation page
 import 'package:tv_series/presentation/pages/home_tv_series_page.dart';
 import 'package:tv_series/presentation/pages/popular_tv_series_page.dart';
 import 'package:tv_series/presentation/pages/top_rated_tv_series_page.dart';
 import 'package:tv_series/presentation/pages/tv_series_detail_page.dart';
 import 'package:tv_series/presentation/pages/watchlist_tv_series_page.dart';
 import 'package:tv_series/presentation/pages/search_tv_series_page.dart';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:ditonton/injection.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
