@@ -1,6 +1,5 @@
 import 'package:about/about.dart';
 import 'package:core/core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:tv_series/presentation/bloc/popular_tv_series_bloc/popular_tv_series_bloc.dart';
 import 'package:tv_series/presentation/bloc/top_rated_tv_series_bloc/top_rated_tv_series_bloc.dart';
@@ -42,8 +41,6 @@ void main() async {
 
   await Firebase.initializeApp();
   await SSLHelper.init();
-
-  FirebaseCrashlytics.instance.crash();
 
   di.init();
   runApp(MyApp());
